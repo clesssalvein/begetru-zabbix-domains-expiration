@@ -10,4 +10,4 @@
       - {$BEGETRU_PASS} - beget.ru account password
     - Attach template to the host
     - Discovery rule will get array of domains
-    - items and Triggers will be created
+    - Items and Triggers will be created
