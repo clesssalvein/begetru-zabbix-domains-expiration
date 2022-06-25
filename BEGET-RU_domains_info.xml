@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<zabbix_export>
+    <version>4.4</version>
+    <date>2022-06-19T15:58:21Z</date>
+    <groups>
+        <group>
+            <name>Hosters</name>
+        </group>
+    </groups>
+    <templates>
+        <template>
+            <template>BEGET-RU_domains_info</template>
+            <name>BEGET-RU_domains_info</name>
+            <groups>
+                <group>
+                    <name>Hosters</name>
+                </group>
+            </groups>
+            <discovery_rules>
+                <discovery_rule>
+                    <name>Список доменов</name>
+                    <type>EXTERNAL</type>
+                    <key>beget-ru_getDomainsList.py[&quot;{$BEGETRU_USER}&quot;,&quot;{$BEGETRU_PASS}&quot;]</key>
+                    <delay>1d</delay>
+                    <item_prototypes>
+                        <item_prototype>
+                            <name>Домен: {#DOMAINNAME}, ID домена: {#DOMAINID}. Время до окончания действия домена</name>
+                            <type>EXTERNAL</type>
+                            <key>beget-ru_getDomainTimeLeft.py[&quot;{$BEGETRU_USER}&quot;,&quot;{$BEGETRU_PASS}&quot;,&quot;{#DOMAINID}&quot;]</key>
+                            <delay>1d</delay>
+                            <value_type>FLOAT</value_type>
+                            <units>s</units>
+                            <trigger_prototypes>
+                                <trigger_prototype>
+                                    <expression>{last()}&lt;2678400</expression>
+                                    <name>Домен: {#DOMAINNAME}, ID домена: {#DOMAINID}. Заканчивается время действия услуги. Проверьте аккаунт BEGET.RU *{$BEGETRU_USER}*</name>
+                                    <priority>HIGH</priority>
+                                </trigger_prototype>
+                                <trigger_prototype>
+                                    <expression>{nodata(31d)}=1</expression>
+                                    <name>Домен: {#DOMAINNAME}, ID домена: {#DOMAINID}. Нет данных от мониторинга</name>
+                                    <priority>HIGH</priority>
+                                </trigger_prototype>
+                            </trigger_prototypes>
+                        </item_prototype>
+                    </item_prototypes>
+                </discovery_rule>
+            </discovery_rules>
+        </template>
+    </templates>
+</zabbix_export>
